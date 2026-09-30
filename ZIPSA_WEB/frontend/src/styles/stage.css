@@ -1,0 +1,47 @@
+/* 가디언 시연 (/stage) */
+.gctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 12px 0 }
+.steps { display: flex; gap: 4px }
+.steps i { width: 22px; height: 4px; border-radius: 2px; background: var(--line) }
+.steps i.on { background: var(--accent) }
+.split { display: grid; grid-template-columns: minmax(0,5fr) minmax(0,7fr); gap: 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--line) }
+.lie { background: var(--stage); color: var(--stage-ink); padding: 18px; display: flex; flex-direction: column; gap: 14px; min-height: 520px }
+.truth { background: var(--surface); padding: 18px; display: flex; flex-direction: column; gap: 12px }
+.tag { font-size: 11.5px; letter-spacing: .12em; font-weight: 600 }
+.lie .tag { color: var(--stage-mut) }
+.truth .tag { color: var(--accent) }
+.visor { background: var(--visor); border-radius: 60px; height: 120px; max-width: 280px; width: 100%; margin: 22px auto 4px; display: flex; justify-content: center; align-items: center; gap: 54px; border: 1px solid var(--stage-line); transition: opacity .6s }
+.eye { width: 26px; height: 40px; border-radius: 13px; background: var(--eye); box-shadow: 0 0 22px var(--eye); animation: bl 4.5s infinite; transition: all .7s }
+@keyframes bl { 0%, 94%, 100% { transform: scaleY(1) } 97% { transform: scaleY(.08) } }
+.visor.off .eye { height: 3px; background: #2A3350; box-shadow: none; animation: none }
+.pwr { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--stage-mut); min-height: 16px }
+.subs { display: flex; flex-direction: column; gap: 9px; margin-top: auto }
+.sub { padding: 9px 12px; border-radius: 11px; font-size: 14px; max-width: 92% }
+.sub small { display: block; font-size: 11px; color: var(--stage-mut); font-weight: 600 }
+.sub.robot { background: var(--stage2); align-self: flex-start }
+.sub.intr { border: 1px solid var(--stage-line); align-self: flex-end; color: #D7DBEE }
+.flags { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px }
+.flag { border: 1px solid var(--line); border-radius: 9px; padding: 6px 9px; font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center }
+.flag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid currentColor; flex: none }
+.flag.on { color: var(--good); border-color: var(--good); background: var(--good-soft) }
+.flag.on::before { background: currentColor }
+.tgrid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: 12px }
+.keys { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--ink2) }
+.keys i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px }
+.notif { border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; background: var(--ground); font-size: 12.5px; display: grid; gap: 4px }
+.notif b { font-size: 12px }
+.tlog { font-family: var(--mono); font-size: 11.5px; display: grid; gap: 4px; max-height: 210px; overflow-y: auto; border-top: 1px solid var(--line); padding-top: 8px }
+.tlog div { display: grid; grid-template-columns: 64px 1fr; gap: 8px }
+.tlog time { color: var(--muted) }
+.tlog .new { animation: flash 1.2s }
+@keyframes flash { from { background: var(--accent-soft) } to { background: transparent } }
+.principles { display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 12px; margin-top: 20px }
+.principles div { border-top: 2px solid var(--ink); padding-top: 8px; font-size: 13px; color: var(--ink2) }
+.principles b { display: block; color: var(--ink); margin-bottom: 2px }
+
+@media (max-width: 900px) {
+  .split, .tgrid { grid-template-columns: minmax(0,1fr) }
+  .lie { min-height: 0 }
+}
+@media (max-width: 480px) {
+  .flags { grid-template-columns: repeat(2,minmax(0,1fr)) }
+}
