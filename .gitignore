@@ -8,3 +8,7 @@ ZIPSA_WEB/docs/
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+
+# Develop Environment
+.idea/
+*.iml
