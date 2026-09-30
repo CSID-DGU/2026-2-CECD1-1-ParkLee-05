@@ -1,0 +1,41 @@
+name: 버그 제보
+description: 발견한 버그를 제보합니다
+title: "[BUG] "
+labels: ["fix"]
+body:
+  - type: textarea
+    id: symptom
+    attributes:
+      label: 현상
+      description: 어떤 문제가 발생했는지 적어 주세요. 에러 메시지나 스크린샷이 있으면 첨부해 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 방법
+      description: 문제를 재현하는 순서를 적어 주세요.
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 결과
+      description: 원래 어떻게 동작해야 하는지 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 환경
+      description: 발생 환경을 적어 주세요.
+      value: |
+        - 파트: be / fe
+        - OS / 브라우저: 
+        - 브랜치 / 커밋: 
+    validations:
+      required: false

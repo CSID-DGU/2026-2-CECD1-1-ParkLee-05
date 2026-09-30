@@ -1,6 +1,6 @@
-# CONTRIBUTING (검토용 초안)
+# CONTRIBUTING
 
-> ZIPSA 팀 협업 규칙 초안입니다. 합의 후 저장소 루트로 옮겨 커밋합니다.
+> ZIPSA 팀 협업 규칙입니다.
 > 스택: **Backend** Spring Boot (`ZIPSA_WEB/backend`) · **Frontend** React (`ZIPSA_WEB/frontend`)
 
 ---
@@ -36,7 +36,9 @@ fix/#21-be-token-expire
 
 ### 2-1. 이슈 생성
 - 모든 작업은 GitHub Issue에서 시작합니다.
-- 라벨을 붙입니다. (예: `feature`, `bug`, `docs`, `refactor`, `chore`, `BE`, `FE`)
+- 종류 라벨 1개와 영역 라벨 1개 이상을 붙입니다.
+  - 종류: `feat`, `fix`, `refactor`, `docs`, `test`, `chore` (커밋 타입과 동일)
+  - 영역: `backend`, `frontend`, `infra`, `design`
 - Notion WBS의 해당 작업 항목과 이슈를 서로 링크합니다. (WBS에 이슈 번호, 이슈 본문에 WBS 링크)
 - 담당자(Assignee)와 마일스톤을 지정합니다.
 
@@ -56,6 +58,7 @@ git switch -c feature/#12-be-chat-api
 | `fix` | 버그 수정 |
 | `docs` | 문서 변경 |
 | `refactor` | 동작 변화 없는 코드 개선 |
+| `test` | 테스트 추가 및 수정 |
 | `chore` | 빌드, 설정, 의존성 등 기타 |
 
 ```
