@@ -4,6 +4,34 @@ export type TabId = 'chat' | 'group' | 'rhythm' | 'care' | 'guard';
 
 export const TAB_IDS: TabId[] = ['chat', 'group', 'rhythm', 'care', 'guard'];
 
+export function isTabId(value: string | undefined): value is TabId {
+  return (TAB_IDS as (string | undefined)[]).includes(value);
+}
+
+/** 탭마다 경로가 따로 있다 (/home/chat, /home/group …) */
+export const tabPath = (tab: TabId) => `/home/${tab}`;
+
+const TAB_STORAGE_KEY = 'zipsa.tab';
+
+/** 마지막으로 본 탭. /home으로 들어오면 이 탭으로 보낸다. */
+export function loadTab(): TabId {
+  try {
+    const saved = localStorage.getItem(TAB_STORAGE_KEY) ?? undefined;
+    if (isTabId(saved)) return saved;
+  } catch {
+    // 저장소를 쓸 수 없는 환경
+  }
+  return 'chat';
+}
+
+export function saveTab(tab: TabId) {
+  try {
+    localStorage.setItem(TAB_STORAGE_KEY, tab);
+  } catch {
+    // 저장소를 쓸 수 없는 환경
+  }
+}
+
 export type SpeakerId = 'guardian' | 'child' | 'guest';
 
 /** 가족 앱 화자와 권한 등급 (UX Flow 5장 권한표) */

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Typing } from '../../components/Thread';
 import { useMessages } from '../../components/useMessages';
 import type { NewMessage } from '../../components/useMessages';
@@ -6,21 +7,9 @@ import { INITIAL_ROBOTS, ROBOT_AVATAR } from '../../data/robots';
 import type { Robot } from '../../data/robots';
 import { eta } from '../../lib/format';
 import { speak, stopSpeaking } from '../../lib/speech';
-import { TAB_IDS, speakerOf } from './homeContext';
+import { saveTab, speakerOf, tabPath } from './homeContext';
 import type { ActionId, SpeakerId, TabId } from './homeContext';
 import { CHAT_FALLBACK, matchIntent } from './intents';
-
-const TAB_STORAGE_KEY = 'zipsa.tab';
-
-function loadTab(): TabId {
-  try {
-    const saved = localStorage.getItem(TAB_STORAGE_KEY);
-    if (saved && (TAB_IDS as string[]).includes(saved)) return saved as TabId;
-  } catch {
-    // 저장소를 쓸 수 없는 환경
-  }
-  return 'chat';
-}
 
 /** 단톡방 말풍선. 집사는 조율 메시지로 표시한다. */
 function robotMessage(id: string, text: string, proto: string): NewMessage {
@@ -47,9 +36,10 @@ const INITIAL_GROUP: NewMessage[] = [
   robotMessage('C3', '배터리 12%라 충전소로 돌아왔어요. 40분 뒤에 다시 일할 수 있어요.', 'F-03 state {robot:"C3", battery:12, dock:true}'),
 ];
 
-/** 가족 앱의 시연 상태와 동작. 서버 연동 전까지 모든 상태는 화면 안에만 있다. */
-export function useFamilyHome() {
-  const [tab, setTab] = useState<TabId>(loadTab);
+/** 가족 앱의 시연 상태와 동작. 서버 연동 전까지 모든 상태는 화면 안에만 있다.
+    현재 탭은 URL(/home/:tab)에서 받는다. */
+export function useFamilyHome(tab: TabId) {
+  const navigate = useNavigate();
   const [robots, setRobots] = useState<Robot[]>(INITIAL_ROBOTS);
   const [awayMode, setAwayMode] = useState(false);
   const [tts, setTtsState] = useState(false);
@@ -65,6 +55,14 @@ export function useFamilyHome() {
   const tabRef = useRef(tab);
   const ttsRef = useRef(tts);
   useEffect(() => { robotsRef.current = robots; }, [robots]);
+  useEffect(() => { tabRef.current = tab; saveTab(tab); }, [tab]);
+
+  // 단톡방에 들어오면 (탭 버튼이든 뒤로 가기든) 읽지 않음 표시를 끈다
+  const [seenTab, setSeenTab] = useState(tab);
+  if (seenTab !== tab) {
+    setSeenTab(tab);
+    if (tab === 'group') setGroupUnread(false);
+  }
 
   /** 음성 답변이 켜져 있거나 음성으로 물었을 때만 읽는다 */
   const say = useCallback((text: string, force = false) => {
@@ -80,14 +78,8 @@ export function useFamilyHome() {
 
   const showTab = useCallback((t: TabId) => {
     tabRef.current = t;
-    setTab(t);
-    if (t === 'group') setGroupUnread(false);
-    try {
-      localStorage.setItem(TAB_STORAGE_KEY, t);
-    } catch {
-      // 저장소를 쓸 수 없는 환경
-    }
-  }, []);
+    navigate(tabPath(t));
+  }, [navigate]);
 
   const patchRobot = useCallback((id: string, patch: Partial<Robot>) => {
     setRobots(rs => rs.map(r => (r.id === id ? { ...r, ...patch } : r)));
