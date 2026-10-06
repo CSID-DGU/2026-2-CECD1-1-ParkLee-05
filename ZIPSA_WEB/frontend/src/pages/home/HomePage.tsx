@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ComponentType } from 'react';
+import { Navigate, useParams } from 'react-router';
 import { CareIcon, ChatIcon, GroupIcon, GuardIcon, RhythmIcon } from '../../components/icons';
 import { PageHeader } from '../../components/PageHeader';
 import { Select } from '../../components/Select';
 import { Toggle } from '../../components/Toggle';
 import '../../styles/home.css';
-import { HomeContext, SPEAKERS, speakerOf } from './homeContext';
+import { HomeContext, SPEAKERS, isTabId, speakerOf, tabPath } from './homeContext';
 import type { TabId } from './homeContext';
 import { RobotCard } from './RobotCard';
 import { CareScreen } from './screens/CareScreen';
@@ -26,10 +27,12 @@ const TABS: { id: TabId; label: string; Icon: ComponentType }[] = [
   { id: 'guard', label: '가디언', Icon: GuardIcon },
 ];
 
-/** 가족 앱 (/home). 다섯 화면을 한 경로 안에서 탭으로 전환한다. */
+/** 가족 앱 (/home/:tab). 탭마다 경로가 다르지만 같은 컴포넌트가 유지되어 대화 내용 등 상태가 남는다. */
 export default function HomePage() {
-  const home = useFamilyHome();
-  const { tab, showTab, robots, tts, setTts, groupUnread, runAction, sendChat, speaker, setSpeaker } = home;
+  const param = useParams().tab;
+  const tab: TabId = isTabId(param) ? param : 'chat';
+  const home = useFamilyHome(tab);
+  const { showTab, robots, tts, setTts, groupUnread, runAction, sendChat, speaker, setSpeaker } = home;
   const [voiceOpen, setVoiceOpen] = useState(false);
 
   useEffect(() => { document.title = 'ZIPSA · 우리 집'; }, []);
@@ -47,6 +50,8 @@ export default function HomePage() {
   const unreadDot = <span className="dot" aria-label="새 메시지" />;
   const ttsToggle = <Toggle checked={tts} onChange={setTts} label="음성으로 답변 읽기" />;
   const current = speakerOf(speaker);
+
+  if (!isTabId(param)) return <Navigate to={tabPath('chat')} replace />;
 
   return (
     <HomeContext.Provider value={actions}>
