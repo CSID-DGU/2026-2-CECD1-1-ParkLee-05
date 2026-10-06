@@ -1,13 +1,16 @@
 /* 가족 앱 (/home)
+   상단: 공통 상단 바 (화면 전환 + 화자 선택)
    PC: 좌측 네비게이션 · 본문 · 우측 로봇 패널
    1100px 이하: 로봇 패널 숨김
    760px 이하: 상단 헤더 · 본문 · 하단 탭 바 */
-.home { height: 100vh; height: 100dvh; display: grid; grid-template-columns: 224px minmax(0,1fr) 288px; background: var(--ground) }
+.home-shell { height: 100vh; height: 100dvh; display: grid; grid-template-rows: auto minmax(0,1fr); background: var(--ground) }
+.home-top { margin: 0; padding: 10px 20px; background: var(--surface); border-bottom: 1px solid var(--line) }
+.home { min-height: 0; display: grid; grid-template-columns: 224px minmax(0,1fr) 288px; background: var(--ground) }
 
 /* 좌측 네비게이션 */
 .home-nav { background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 22px; padding: 20px 12px 16px; min-height: 0; overflow-y: auto }
 .home-id { padding-inline: 10px; display: grid; gap: 2px }
-.home-id b { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .02em }
+.home-id b { font-family: var(--display); font-weight: 800; font-size: 17px }
 .home-tabs { display: flex; flex-direction: column; gap: 2px }
 .home-tabs button { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; color: var(--ink2); font-weight: 500; text-align: left }
 .home-tabs button:hover { background: var(--sunk) }
@@ -96,6 +99,7 @@
   .home-robots { display: none }
 }
 @media (max-width: 760px) {
+  .home-top { padding: 8px 12px }
   .home { grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(0,1fr) auto }
   .home-nav { display: none }
   .home-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 16px 10px; border-bottom: 1px solid var(--line); background: var(--surface) }

@@ -6,8 +6,8 @@ import { INITIAL_ROBOTS, ROBOT_AVATAR } from '../../data/robots';
 import type { Robot } from '../../data/robots';
 import { eta } from '../../lib/format';
 import { speak, stopSpeaking } from '../../lib/speech';
-import { TAB_IDS } from './homeContext';
-import type { ActionId, TabId } from './homeContext';
+import { TAB_IDS, speakerOf } from './homeContext';
+import type { ActionId, SpeakerId, TabId } from './homeContext';
 import { CHAT_FALLBACK, matchIntent } from './intents';
 
 const TAB_STORAGE_KEY = 'zipsa.tab';
@@ -54,6 +54,7 @@ export function useFamilyHome() {
   const [awayMode, setAwayMode] = useState(false);
   const [tts, setTtsState] = useState(false);
   const [groupUnread, setGroupUnread] = useState(false);
+  const [speaker, setSpeaker] = useState<SpeakerId>('guardian');
   const chat = useMessages(INITIAL_CHAT);
   const group = useMessages(INITIAL_GROUP);
   const { add: addChat, update: updateChat } = chat;
@@ -139,7 +140,7 @@ export function useFamilyHome() {
   const sendChat = useCallback((question: string, viaVoice = false) => {
     addChat({
       me: true,
-      body: viaVoice ? <><span style={{ opacity: 0.75, fontSize: 11 }}>음성 · 보호자 1</span><br />{question}</> : question,
+      body: viaVoice ? <><span style={{ opacity: 0.75, fontSize: 11 }}>음성 · {speakerOf(speaker).label}</span><br />{question}</> : question,
     });
     const pendingId = addChat({ body: <Typing /> });
     const hasReply = matchIntent(question, robotsRef.current) !== null;
@@ -148,7 +149,7 @@ export function useFamilyHome() {
       updateChat(pendingId, reply ? reply.body : CHAT_FALLBACK);
       say(reply ? reply.say : CHAT_FALLBACK, viaVoice);
     }, hasReply ? 650 : 50);
-  }, [addChat, updateChat, say]);
+  }, [addChat, updateChat, say, speaker]);
 
   /** 단톡방에 가족 메시지를 보낸다. @로 지목한 로봇(없으면 E5)이 상태에 맞게 답한다. */
   const sendGroup = useCallback((text: string) => {
@@ -177,6 +178,7 @@ export function useFamilyHome() {
     awayMode, setAwayMode,
     tts, setTts,
     groupUnread,
+    speaker, setSpeaker,
     chatMessages: chat.messages,
     groupMessages: group.messages,
     runAction, sendChat, sendGroup,

@@ -21,29 +21,32 @@ function getRecognition(): RecognitionConstructor | undefined {
 }
 
 const EXAMPLES = ['D4 왜 멈췄어?', '어머니 오늘 어떠셔?', '주말에 집 비울 거야'];
-const IDENTIFIED = '화자: 보호자 1 · 권한 전체';
 const UNSUPPORTED = '이 브라우저에서는 마이크 인식을 쓸 수 없어 예시 발화로 시연합니다.';
 const UNAVAILABLE = '마이크를 쓸 수 없는 환경이에요. 예시 발화로 시연합니다.';
 
 interface VoiceOverlayProps {
+  /** 인식 후 보여 줄 화자 표시 (예: "화자: 보호자 · 권한 전체") */
+  identified: string;
   onClose: () => void;
   /** 최종 인식 문장 (또는 누른 예시 발화) */
   onFinish: (text: string) => void;
 }
 
-export function VoiceOverlay({ onClose, onFinish }: VoiceOverlayProps) {
+export function VoiceOverlay({ identified, onClose, onFinish }: VoiceOverlayProps) {
   const [heard, setHeard] = useState('듣고 있어요…');
   const [speaker, setSpeaker] = useState('화자 인식 대기 중');
   const [note, setNote] = useState(() => (getRecognition() ? '' : UNSUPPORTED));
   const finished = useRef(false);
   const onFinishRef = useRef(onFinish);
   useEffect(() => { onFinishRef.current = onFinish; }, [onFinish]);
+  const identifiedRef = useRef(identified);
+  useEffect(() => { identifiedRef.current = identified; }, [identified]);
 
   const finish = useCallback((text: string) => {
     if (finished.current) return;
     finished.current = true;
     setHeard(text);
-    setSpeaker(IDENTIFIED);
+    setSpeaker(identifiedRef.current);
     setTimeout(() => onFinishRef.current(text), 550);
   }, []);
 
@@ -58,7 +61,7 @@ export function VoiceOverlay({ onClose, onFinish }: VoiceOverlayProps) {
       rec.onresult = ev => {
         const r = ev.results[ev.results.length - 1];
         setHeard(r[0].transcript);
-        setSpeaker(IDENTIFIED);
+        setSpeaker(identifiedRef.current);
         if (r.isFinal) finish(r[0].transcript);
       };
       rec.onerror = () => setNote(UNAVAILABLE);
