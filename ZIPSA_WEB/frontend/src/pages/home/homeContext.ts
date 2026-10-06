@@ -4,6 +4,19 @@ export type TabId = 'chat' | 'group' | 'rhythm' | 'care' | 'guard';
 
 export const TAB_IDS: TabId[] = ['chat', 'group', 'rhythm', 'care', 'guard'];
 
+export type SpeakerId = 'guardian' | 'child' | 'guest';
+
+/** 가족 앱 화자와 권한 등급 (UX Flow 5장 권한표) */
+export const SPEAKERS: { id: SpeakerId; label: string; level: string }[] = [
+  { id: 'guardian', label: '보호자', level: '권한 전체' },
+  { id: 'child', label: '아이', level: '제한' },
+  { id: 'guest', label: '손님', level: '조회만' },
+];
+
+export function speakerOf(id: SpeakerId) {
+  return SPEAKERS.find(s => s.id === id) ?? SPEAKERS[0];
+}
+
 /** 대화 카드의 버튼으로 실행하는 시연 동작 */
 export type ActionId = 'd4-handoff' | 'd4-resume' | 'why-e5' | 'approve-task' | 'vent-on' | 'laundry-yes' | 'away-on';
 
