@@ -20,8 +20,8 @@ const LADDER = [
   '2분간 응답이 없으면 보호자에게 알립니다',
   '보호자도 닿지 않으면 관제센터가 방문을 요청합니다',
 ];
-/** 활동 단절 시뮬레이션에서 각 단계가 켜지는 시점(ms) */
-const LADDER_DELAYS = [300, 1700, 3100];
+/** 활동 단절 시뮬레이션에서 각 단계가 켜지는 시점(ms). 명세서 기준 1.6초 간격 */
+const LADDER_DELAYS = [300, 1900, 3500];
 
 export function CareScreen({ active }: { active: boolean }) {
   const toast = useToast();
