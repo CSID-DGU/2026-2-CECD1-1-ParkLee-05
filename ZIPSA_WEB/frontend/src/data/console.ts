@@ -29,11 +29,11 @@ export const OFFLINE_UNITS = [31, 45];
 export const FEATURE_MAP: [string, string, string][] = [
   ['F-03 실시간 상태 수집', 'get_robot_state', '"로봇들 지금 뭐 해?"'],
   ['F-04 이상 징후 감지', 'explain_incident', '"D4 왜 멈췄어?"'],
-  ['F-05 원격 명령', 'send_command (승인 필요)', '"치웠어, 다시 해"'],
-  ['F-07 · F-19 작업·KPI', 'summarize_tasks', '"오늘 집 어땠어?"'],
-  ['F-08 · F-09 스케줄', 'plan_schedule', '"내일 아침 빨래 돌려줘"'],
+  ['F-05 원격 명령', 'propose_action → execute_action (승인 필요)', '"치웠어, 다시 해"'],
+  ['F-07 · F-19 작업·KPI', 'get_robot_state', '"오늘 집 어땠어?"'],
+  ['F-08 · F-09 스케줄', 'propose_action → execute_action (schedule_laundry)', '"내일 아침 빨래 돌려줘"'],
   ['F-10 · F-11 다중 로봇 조율', '로봇 단톡방', '"@E5 작은방 정리 부탁해"'],
   ['F-13 · F-14 로그', 'search_log', '"어제 3시에 거실에서 무슨 일 있었어?"'],
-  ['F-15 컨텍스트 분석', '리듬 엔진', '(먼저 제안) "토요일 아침 빨래, 돌려둘까요?"'],
+  ['F-15 컨텍스트 분석', 'get_home_rhythm', '(먼저 제안) "토요일 아침 빨래, 돌려둘까요?"'],
   ['F-02 · F-16 · F-17 보안', '화자 권한 · 정직 원장', '(자동) 아이 목소리로는 인덕션이 켜지지 않음'],
 ];
