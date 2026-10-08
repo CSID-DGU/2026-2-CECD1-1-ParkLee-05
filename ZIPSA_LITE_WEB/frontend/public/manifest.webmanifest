@@ -1,0 +1,2 @@
+{ "name": "ZIPSA 로봇 관리", "short_name": "ZIPSA", "start_url": "/", "display": "standalone", "background_color": "#F2F4F7", "theme_color": "#1F4F8F",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }] }
