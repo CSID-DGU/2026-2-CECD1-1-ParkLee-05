@@ -1,5 +1,6 @@
 # 로컬 전용 문서
 ZIPSA_WEB/docs/
+ZIPSA_LITE_WEB/docs/
 
 # macOS
 .DS_Store
