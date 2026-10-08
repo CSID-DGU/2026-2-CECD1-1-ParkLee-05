@@ -7,7 +7,7 @@ const TOOL_LABEL: Record<string, string> = { get_robots: '로봇 상태 확인 �
 
 type Snap = { home?: Home; robots: Robot[]; tasks?: Task[]; services: Service[]; issues?: Issue[] };
 type Store = {
-  user: User | null; meta: Meta | null; llm: { llm: boolean; model: string | null; robotModel: string } | null; connected: boolean;
+  user: User | null; restoring: boolean; meta: Meta | null; llm: { llm: boolean; model: string | null; robotModel: string } | null; connected: boolean;
   login: (u: User, token: string) => void; logout: () => void;
   home: Home | null; robots: Robot[]; tasks: Task[]; services: Service[]; issues: Issue[]; logs: Log[];
   members: { members: Member[]; invites: Invite[] } | null; refreshMembers: () => Promise<void>;
@@ -20,6 +20,8 @@ let mid = 1;
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  // 저장된 토큰으로 로그인 상태를 되살리는 중 (새로고침 직후)
+  const [restoring, setRestoring] = useState(() => !!getToken());
   const [meta, setMeta] = useState<Meta | null>(null);
   const [llm, setLlm] = useState<Store['llm']>(null);
   const [connected, setConnected] = useState(false);
@@ -33,7 +35,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const toastT = useRef<number>(0); const ttsRef = useRef(tts); ttsRef.current = tts; const chatRef = useRef(chat); chatRef.current = chat;
   const notify = useCallback((t: string) => { setToast(t); window.clearTimeout(toastT.current); toastT.current = window.setTimeout(() => setToast(null), 3200); }, []);
 
-  useEffect(() => { get<Meta>('/api/meta').then(setMeta); get<Store['llm']>('/api/health').then(setLlm); if (getToken()) get<User>('/api/auth/me').then(setUser).catch(() => setToken('')); }, []);
+  useEffect(() => { get<Meta>('/api/meta').then(setMeta); get<Store['llm']>('/api/health').then(setLlm); if (getToken()) get<User>('/api/auth/me').then(setUser).catch(() => setToken('')).finally(() => setRestoring(false)); }, []);
   const login = (u: User, token: string) => { setToken(token); setUser(u); setChat([]); };
   const logout = () => { setToken(''); setUser(null); setSnap({ robots: [], services: [] }); setChat([]); setMembers(null); };
   const refreshMembers = useCallback(async () => { if (user && user.role !== 'admin') setMembers(await get('/api/home/members')); }, [user]);
@@ -69,7 +71,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     finally { setBusy(false); }
   }, []);
 
-  const value = useMemo<Store>(() => ({ user, meta, llm, connected, login, logout, home: snap.home || null, robots: snap.robots, tasks: snap.tasks || [], services: snap.services, issues: snap.issues || [], logs, members, refreshMembers, chat, busy, send, tts, setTts, toast, notify }),
-    [user, meta, llm, connected, snap, logs, members, refreshMembers, chat, busy, send, tts, toast, notify]);
+  const value = useMemo<Store>(() => ({ user, restoring, meta, llm, connected, login, logout, home: snap.home || null, robots: snap.robots, tasks: snap.tasks || [], services: snap.services, issues: snap.issues || [], logs, members, refreshMembers, chat, busy, send, tts, setTts, toast, notify }),
+    [user, restoring, meta, llm, connected, snap, logs, members, refreshMembers, chat, busy, send, tts, toast, notify]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

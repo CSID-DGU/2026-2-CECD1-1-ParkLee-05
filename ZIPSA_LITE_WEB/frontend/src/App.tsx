@@ -23,7 +23,9 @@ function Shell({ admin }: { admin: boolean }) {
 }
 
 export default function App() {
-  const { toast, user } = useStore();
+  const { toast, user, restoring } = useStore();
+  // 새로고침 직후에는 로그인 상태를 되살린 뒤에 화면을 정한다 (먼저 그리면 로그인 화면으로 튕긴다)
+  if (restoring) return null;
   return (<>
     <Routes>
       <Route path="/login" element={<Auth />} />
